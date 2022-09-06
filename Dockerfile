@@ -45,27 +45,27 @@ RUN cd /app \
 ######################################################################
 # Node stage to deal with static asset construction
 ######################################################################
-FROM node:16 AS superset-node
+# FROM node:16 AS superset-node
 
-ARG NPM_VER=7
-RUN npm install -g npm@${NPM_VER}
+# ARG NPM_VER=7
+# RUN npm install -g npm@${NPM_VER}
 
-ARG NPM_BUILD_CMD="build"
-ENV BUILD_CMD=${NPM_BUILD_CMD}
+# ARG NPM_BUILD_CMD="build"
+# ENV BUILD_CMD=${NPM_BUILD_CMD}
 
-# NPM ci first, as to NOT invalidate previous steps except for when package.json changes
-RUN mkdir -p /app/superset-frontend
-RUN mkdir -p /app/superset/assets
-COPY ./docker/frontend-mem-nag.sh /
-COPY ./superset-frontend /app/superset-frontend
-RUN /frontend-mem-nag.sh \
-        && cd /app/superset-frontend \
-        && npm ci
+# # NPM ci first, as to NOT invalidate previous steps except for when package.json changes
+# RUN mkdir -p /app/superset-frontend
+# RUN mkdir -p /app/superset/assets
+# COPY ./docker/frontend-mem-nag.sh /
+# COPY ./superset-frontend /app/superset-frontend
+# RUN /frontend-mem-nag.sh \
+#         && cd /app/superset-frontend \
+#         && npm ci
 
-# This seems to be the most expensive step
-RUN cd /app/superset-frontend \
-        && npm run ${BUILD_CMD} \
-        && rm -rf node_modules
+# # This seems to be the most expensive step
+# RUN cd /app/superset-frontend \
+#         && npm run ${BUILD_CMD} \
+#         && rm -rf node_modules
 
 
 ######################################################################
